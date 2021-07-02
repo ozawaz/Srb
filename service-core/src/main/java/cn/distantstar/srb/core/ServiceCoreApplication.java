@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @author: distantstar
  */
 @SpringBootApplication
-@ComponentScan({"cn.distantstar.srb"})
+@ComponentScan(basePackages = {"cn.distantstar.srb", "cn.distantstar.common"})
 public class ServiceCoreApplication {
     public static void main(String[] args) {
         SpringApplication.run(ServiceCoreApplication.class, args);
