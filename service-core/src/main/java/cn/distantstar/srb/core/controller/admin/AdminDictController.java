@@ -7,12 +7,12 @@ import cn.distantstar.srb.core.pojo.dto.ExcelDictDTO;
 import cn.distantstar.srb.core.pojo.entity.Dict;
 import cn.distantstar.srb.core.service.DictService;
 import com.alibaba.excel.EasyExcel;
-import com.baomidou.mybatisplus.extension.api.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

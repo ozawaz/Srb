@@ -9,6 +9,7 @@
         <module>star-common</module>
         <module>service-base</module>
         <module>service-core</module>
+        <module>service-sms</module>
     </modules>
     <name>srb</name>
     <packaging>pom</packaging>

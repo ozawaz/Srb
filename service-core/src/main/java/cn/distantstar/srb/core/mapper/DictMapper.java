@@ -3,6 +3,7 @@ package cn.distantstar.srb.core.mapper;
 import cn.distantstar.srb.core.pojo.dto.ExcelDictDTO;
 import cn.distantstar.srb.core.pojo.entity.Dict;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * @author Star
  * @since 2021-07-02
  */
+@Mapper
 public interface DictMapper extends BaseMapper<Dict> {
 
     /**

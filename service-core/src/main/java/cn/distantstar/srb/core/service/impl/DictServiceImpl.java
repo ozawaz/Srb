@@ -9,13 +9,16 @@ import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -28,6 +31,13 @@ import java.util.List;
 @Service
 @Slf4j
 public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements DictService {
+
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     @Override
     public void importData(InputStream inputStream) {
@@ -53,15 +63,41 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
     @Override
     public List<Dict> listByParentId(Long parentId) {
+        // 首先判断redis中有没有相应的数据
+        List<Dict> dictList = null;
+        try {
+            dictList = (List<Dict>) redisTemplate.opsForValue().get("srb:core:dictList:" + parentId);
+            if(dictList != null){
+                log.info("从redis中取值成功");
+                return dictList;
+            }
+        } catch (Exception e) {
+            // 此处不抛出异常，继续执行后面的代码。
+            // 因为缓存中没有取到数据，就去数据库看看
+            log.error("redis服务器异常：" + ExceptionUtils.getStackTrace(e));
+        }
+
+        log.info("从数据库中取值");
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
         wrapper.eq("parent_id", parentId);
-        List<Dict> dictList = baseMapper.selectList(wrapper);
+        dictList = baseMapper.selectList(wrapper);
         dictList.forEach( dict -> {
                 //如果有子节点，则是非叶子节点
                 boolean hasChildren = this.hasChildren(dict.getId());
                 dict.setHasChildren(hasChildren);
             }
         );
+
+        // 将数据存入redis
+        try {
+            redisTemplate.opsForValue().set("srb:core:dictList:" + parentId,
+                    dictList, 5, TimeUnit.MINUTES);
+            log.info("数据存入redis");
+        } catch (Exception e) {
+            //此处不抛出异常，继续执行后面的代码
+            log.error("redis服务器异常：" + ExceptionUtils.getStackTrace(e));
+        }
+
         return dictList;
     }
 
