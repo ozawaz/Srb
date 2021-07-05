@@ -11,7 +11,7 @@ spring:
     host: 49.232.218.205
     port: 6379
     database: 0
-    password:  #默认为空
+    password: Cw1Hl*AB9pi2YybW #默认为空
     timeout: 3000ms #最大等待时间，超时则抛出异常，否则请求一直等待
     lettuce:
       pool:
@@ -19,3 +19,12 @@ spring:
         max-wait: -1    #最大阻塞等待时间，负值表示没限制，默认-1
         max-idle: 8     #最大空闲连接，默认8
         min-idle: 0     #最小空闲连接，默认0
+
+#阿里云短信
+aliyun:
+  sms:
+    region-id: cn-hangzhou
+    key-id: 你的keyid
+    key-secret: 你的keysecret
+    template-code: 你的短信模板code
+    sign-name: 你的短信模板签名
