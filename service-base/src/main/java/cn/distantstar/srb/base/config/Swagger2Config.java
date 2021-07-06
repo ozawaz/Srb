@@ -34,7 +34,7 @@ public class Swagger2Config {
                 .groupName("webApi")
                 .apiInfo(webApiInfo())
                 .select()
-                .paths(Predicates.and(PathSelectors.regex("/api/.*")))
+                .paths(Predicates.and(PathSelectors.regex("/api/core/.*")))
                 .build();
     }
 
@@ -46,7 +46,7 @@ public class Swagger2Config {
                 .apiInfo(apiInfo())
                 .select()
                 //只显示admin路径下的页面
-                .paths(Predicates.and(PathSelectors.regex("/api/.*")))
+                .paths(Predicates.and(PathSelectors.regex("/api/sms/.*")))
                 .build();
 
     }

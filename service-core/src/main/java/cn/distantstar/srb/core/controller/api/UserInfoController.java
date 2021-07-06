@@ -5,10 +5,14 @@ import cn.distantstar.common.exception.Assert;
 import cn.distantstar.common.result.ResponseEnum;
 import cn.distantstar.common.result.Result;
 import cn.distantstar.common.util.RegexValidateUtils;
+import cn.distantstar.srb.base.utils.JwtUtils;
+import cn.distantstar.srb.core.pojo.vo.LoginVo;
 import cn.distantstar.srb.core.pojo.vo.RegisterVo;
+import cn.distantstar.srb.core.pojo.vo.UserInfoVo;
 import cn.distantstar.srb.core.service.UserInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -68,6 +72,36 @@ public class UserInfoController {
         userInfoService.register(registerVO);
 
         return Result.ok().message("注册成功");
+    }
+
+    @ApiOperation("会员登录")
+    @PostMapping("/login")
+    public Result<UserInfoVo> login(@RequestBody LoginVo loginVo, HttpServletRequest request) {
+        String mobile = loginVo.getMobile();
+        String password = loginVo.getPassword();
+        Assert.notEmpty(mobile, ResponseEnum.MOBILE_NULL_ERROR);
+        Assert.notEmpty(password, ResponseEnum.PASSWORD_NULL_ERROR);
+
+        String ip = request.getRemoteAddr();
+        UserInfoVo userInfoVo = userInfoService.login(loginVo, ip);
+
+        return Result.ok(userInfoVo);
+    }
+
+    @ApiOperation("校验令牌")
+    @GetMapping("/checkToken")
+    public Result checkToken(HttpServletRequest request) {
+        // 从请求中获取token
+        String token = request.getHeader("token");
+        // 校验token
+        boolean result = JwtUtils.checkToken(token);
+
+        if (result) {
+            return Result.ok();
+        } else {
+            return Result.build(ResponseEnum.LOGIN_AUTH_ERROR.getCode(),
+                    ResponseEnum.LOGIN_AUTH_ERROR.getMessage());
+        }
     }
 }
 
