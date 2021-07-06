@@ -52,13 +52,13 @@ public class ApiSmsController {
         // MOBILE_ERROR(-203, "手机号不正确"),
         Assert.isTrue(RegexValidateUtils.checkCellphone(mobile), ResponseEnum.MOBILE_ERROR);
 
-        //生成验证码
+        // 生成验证码
         String code = RandomUtils.getFourBitRandom();
-        //组装短信模板参数
+        // 组装短信模板参数
         Map<String,Object> param = new HashMap<>(1);
         param.put("code", code);
-        //发送短信
-        smsService.send(mobile, SmsProperties.TEMPLATE_CODE, param);
+        // 发送短信
+//        smsService.send(mobile, SmsProperties.TEMPLATE_CODE, param);
 
         //将验证码存入redis
         redisTemplate.opsForValue().set("srb:sms:code:" + mobile,

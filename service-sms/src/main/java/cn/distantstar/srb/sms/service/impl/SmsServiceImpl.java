@@ -62,6 +62,7 @@ public class SmsServiceImpl implements SmsService {
             // ALIYUN_RESPONSE_FAIL(-501, "阿里云响应失败"),
             Assert.isTrue(success, ResponseEnum.ALIYUN_RESPONSE_FAIL);
 
+            // 将返回的结果获取，并打印到日志中
             String data = response.getData();
             HashMap<String, String> resultMap = gson.fromJson(data, HashMap.class);
             String code = resultMap.get("Code");
