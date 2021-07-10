@@ -5,6 +5,7 @@ import cn.distantstar.common.result.ResponseEnum;
 import cn.distantstar.common.result.Result;
 import cn.distantstar.common.util.RandomUtils;
 import cn.distantstar.common.util.RegexValidateUtils;
+import cn.distantstar.srb.sms.client.CoreUserInfoClient;
 import cn.distantstar.srb.sms.service.SmsService;
 import cn.distantstar.srb.sms.utils.SmsProperties;
 import io.swagger.annotations.Api;
@@ -26,11 +27,11 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/api/sms")
 @Slf4j
-@CrossOrigin
 public class ApiSmsController {
 
     private SmsService smsService;
     private RedisTemplate<String, Object> redisTemplate;
+//    private CoreUserInfoClient coreUserInfoClient;
 
     @Autowired
     public void setSmsService(SmsService smsService) {
@@ -42,6 +43,11 @@ public class ApiSmsController {
         this.redisTemplate = redisTemplate;
     }
 
+//    @Autowired
+//    public void setCoreUserInfoClient(CoreUserInfoClient coreUserInfoClient) {
+//        this.coreUserInfoClient = coreUserInfoClient;
+//    }
+
     @ApiOperation("获取验证码")
     @GetMapping("/send/{mobile}")
     public Result send(@ApiParam(value = "手机号", required = true)
@@ -51,6 +57,11 @@ public class ApiSmsController {
         Assert.notEmpty(mobile, ResponseEnum.MOBILE_NULL_ERROR);
         // MOBILE_ERROR(-203, "手机号不正确"),
         Assert.isTrue(RegexValidateUtils.checkCellphone(mobile), ResponseEnum.MOBILE_ERROR);
+
+        //手机号是否注册
+//        boolean result = coreUserInfoClient.checkMobile(mobile);
+//        System.out.println("result = " + result);
+//        Assert.isTrue(!result, ResponseEnum.MOBILE_EXIST_ERROR);
 
         // 生成验证码
         String code = RandomUtils.getFourBitRandom();

@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/core/userInfo")
 @Slf4j
-@CrossOrigin
 public class UserInfoController {
 
     private UserInfoService userInfoService;
@@ -102,6 +101,12 @@ public class UserInfoController {
             return Result.build(ResponseEnum.LOGIN_AUTH_ERROR.getCode(),
                     ResponseEnum.LOGIN_AUTH_ERROR.getMessage());
         }
+    }
+
+    @ApiOperation("校验手机号是否注册")
+    @GetMapping("/checkMobile/{mobile}")
+    public boolean checkMobile(@PathVariable String mobile){
+        return userInfoService.checkMobile(mobile);
     }
 }
 

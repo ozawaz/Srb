@@ -110,4 +110,12 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
         return userInfoVo;
     }
+
+    @Override
+    public boolean checkMobile(String mobile) {
+        QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("mobile", mobile);
+        Integer count = baseMapper.selectCount(queryWrapper);
+        return count > 0;
+    }
 }

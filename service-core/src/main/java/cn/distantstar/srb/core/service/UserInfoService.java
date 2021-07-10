@@ -29,4 +29,11 @@ public interface UserInfoService extends IService<UserInfo> {
      * @return 返回查询到的用户信息
      */
     UserInfoVo login(LoginVo loginVo, String ip);
+
+    /**
+     * 判断手机号是否已经注册
+     * @param mobile 手机号
+     * @return 返回结果
+     */
+    boolean checkMobile(String mobile);
 }
