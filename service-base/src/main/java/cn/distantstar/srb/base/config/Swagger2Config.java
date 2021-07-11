@@ -51,6 +51,19 @@ public class Swagger2Config {
 
     }
 
+    @Bean
+    public Docket apiOssConfig(){
+
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("apiOss")
+                .apiInfo(apiOssInfo())
+                .select()
+                //只显示admin路径下的页面
+                .paths(Predicates.and(PathSelectors.regex("/api/oss/.*")))
+                .build();
+
+    }
+
     private ApiInfo adminApiInfo() {
         return new ApiInfoBuilder()
                 .title("尚融宝后台管理系统-API文档")
@@ -74,6 +87,16 @@ public class Swagger2Config {
         return new ApiInfoBuilder()
                 .title("尚融宝-API文档")
                 .description("本文档描述了尚融宝接口")
+                .version("1.0")
+                .contact(new Contact("Star", "http://distantstar.cn", "1261276386@qq.com"))
+                .build();
+    }
+
+    private ApiInfo apiOssInfo(){
+
+        return new ApiInfoBuilder()
+                .title("尚融宝-API文档")
+                .description("本文档描述了尚融宝Oss接口")
                 .version("1.0")
                 .contact(new Contact("Star", "http://distantstar.cn", "1261276386@qq.com"))
                 .build();

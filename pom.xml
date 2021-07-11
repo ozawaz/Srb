@@ -11,6 +11,8 @@
         <module>service-core</module>
         <module>service-sms</module>
         <module>service-gateway</module>
+        <module>srb-oss</module>
+        <module>service-oss</module>
     </modules>
     <name>srb</name>
     <packaging>pom</packaging>
