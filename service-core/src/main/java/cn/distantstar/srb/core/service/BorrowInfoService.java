@@ -1,9 +1,12 @@
 package cn.distantstar.srb.core.service;
 
 import cn.distantstar.srb.core.pojo.entity.BorrowInfo;
+import cn.distantstar.srb.core.pojo.vo.BorrowInfoApprovalVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -35,4 +38,23 @@ public interface BorrowInfoService extends IService<BorrowInfo> {
      * @return 返回状态
      */
     Integer getStatusByUserId(Long userId);
+
+    /**
+     * 获取申请信息
+     * @return 返回申请信息
+     */
+    List<BorrowInfo> selectList();
+
+    /**
+     * 获取借款信息
+     * @param id id
+     * @return 返回借款信息
+     */
+    Map<String, Object> getBorrowInfoDetail(Long id);
+
+    /**
+     * 审批借款信息
+     * @param borrowInfoApprovalVO 申请信息
+     */
+    void approval(BorrowInfoApprovalVo borrowInfoApprovalVO);
 }
