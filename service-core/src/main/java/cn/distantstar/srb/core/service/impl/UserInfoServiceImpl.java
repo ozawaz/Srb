@@ -10,11 +10,15 @@ import cn.distantstar.srb.core.pojo.entity.UserAccount;
 import cn.distantstar.srb.core.pojo.entity.UserInfo;
 import cn.distantstar.srb.core.mapper.UserInfoMapper;
 import cn.distantstar.srb.core.pojo.entity.UserLoginRecord;
+import cn.distantstar.srb.core.pojo.query.UserInfoQuery;
 import cn.distantstar.srb.core.pojo.vo.LoginVo;
 import cn.distantstar.srb.core.pojo.vo.RegisterVo;
 import cn.distantstar.srb.core.pojo.vo.UserInfoVo;
 import cn.distantstar.srb.core.service.UserInfoService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -117,5 +121,28 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         queryWrapper.eq("mobile", mobile);
         Integer count = baseMapper.selectCount(queryWrapper);
         return count > 0;
+    }
+
+    @Override
+    public IPage<UserInfo> listPage(Page<UserInfo> pageParam, UserInfoQuery userInfoQuery) {
+        String mobile = userInfoQuery.getMobile();
+        Integer status = userInfoQuery.getStatus();
+        Integer userType = userInfoQuery.getUserType();
+
+        QueryWrapper<UserInfo> userInfoQueryWrapper = new QueryWrapper<>();
+
+        userInfoQueryWrapper
+                .eq(StringUtils.isNotBlank(mobile), "mobile", mobile)
+                .eq(status != null, "status", userInfoQuery.getStatus())
+                .eq(userType != null, "user_type", userType);
+        return baseMapper.selectPage(pageParam, userInfoQueryWrapper);
+    }
+
+    @Override
+    public void lock(Long id, Integer status) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(id);
+        userInfo.setStatus(status);
+        baseMapper.updateById(userInfo);
     }
 }

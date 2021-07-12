@@ -7,7 +7,6 @@ spring:
   application:
     name: service-oss # 服务名
 
-
 aliyun:
   oss:
     endpoint: 你的endponit

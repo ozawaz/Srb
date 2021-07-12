@@ -1,9 +1,12 @@
 package cn.distantstar.srb.core.service;
 
 import cn.distantstar.srb.core.pojo.entity.UserInfo;
+import cn.distantstar.srb.core.pojo.query.UserInfoQuery;
 import cn.distantstar.srb.core.pojo.vo.LoginVo;
 import cn.distantstar.srb.core.pojo.vo.RegisterVo;
 import cn.distantstar.srb.core.pojo.vo.UserInfoVo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -36,4 +39,19 @@ public interface UserInfoService extends IService<UserInfo> {
      * @return 返回结果
      */
     boolean checkMobile(String mobile);
+
+    /**
+     * 获取会员分页列表
+     * @param pageParam 参数
+     * @param userInfoQuery 用户查询信息
+     * @return 返回用户列表
+     */
+    IPage<UserInfo> listPage(Page<UserInfo> pageParam, UserInfoQuery userInfoQuery);
+
+    /**
+     * 锁定和解锁
+     * @param id 用户id
+     * @param status 锁定状态
+     */
+    void lock(Long id, Integer status);
 }
