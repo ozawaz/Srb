@@ -15,6 +15,7 @@ import cn.distantstar.srb.core.service.TransFlowService;
 import cn.distantstar.srb.core.service.UserAccountService;
 import cn.distantstar.srb.core.util.LendNoUtils;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -98,5 +99,16 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
         transFlowService.saveTransFlow(transFlowBO);
 
         return "success";
+    }
+
+    @Override
+    public BigDecimal getAccount(Long userId) {
+        //根据userId查找用户账户
+        QueryWrapper<UserAccount> userAccountQueryWrapper = new QueryWrapper<>();
+        userAccountQueryWrapper.eq("user_id", userId);
+        UserAccount userAccount = baseMapper.selectOne(userAccountQueryWrapper);
+
+        BigDecimal amount = userAccount.getAmount();
+        return amount;
     }
 }
