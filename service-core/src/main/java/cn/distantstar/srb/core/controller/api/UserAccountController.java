@@ -6,6 +6,7 @@ import cn.distantstar.srb.base.utils.JwtUtils;
 import cn.distantstar.srb.core.hfb.RequestHelper;
 import cn.distantstar.srb.core.service.UserAccountService;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.extension.api.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -73,6 +74,40 @@ public class UserAccountController {
         Long userId = JwtUtils.getUserId(token);
         BigDecimal account = userAccountService.getAccount(userId);
         return Result.ok(account);
+    }
+
+    @ApiOperation("用户提现")
+    @PostMapping("/auth/commitWithdraw/{fetchAmt}")
+    public Result<String> commitWithdraw(
+            @ApiParam(value = "金额", required = true)
+            @PathVariable BigDecimal fetchAmt, HttpServletRequest request) {
+
+        String token = request.getHeader("token");
+        Long userId = JwtUtils.getUserId(token);
+        String formStr = userAccountService.commitWithdraw(fetchAmt, userId);
+        return Result.ok(formStr);
+    }
+
+    @ApiOperation("用户提现异步回调")
+    @PostMapping("/notifyWithdraw")
+    public String notifyWithdraw(HttpServletRequest request) {
+        Map<String, Object> paramMap = RequestHelper.switchMap(request.getParameterMap());
+        log.info("提现异步回调：" + JSON.toJSONString(paramMap));
+
+        //校验签名
+        if(RequestHelper.isSignEquals(paramMap)) {
+            //提现成功交易
+            if("0001".equals(paramMap.get("resultCode"))) {
+                userAccountService.notifyWithdraw(paramMap);
+            } else {
+                log.info("提现异步回调充值失败：" + JSON.toJSONString(paramMap));
+                return "fail";
+            }
+        } else {
+            log.info("提现异步回调签名错误：" + JSON.toJSONString(paramMap));
+            return "fail";
+        }
+        return "success";
     }
 }
 
