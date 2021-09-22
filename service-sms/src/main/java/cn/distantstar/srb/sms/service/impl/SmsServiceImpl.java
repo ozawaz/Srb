@@ -77,11 +77,6 @@ public class SmsServiceImpl implements SmsService {
             // ALIYUN_SMS_ERROR(-503, "短信发送失败"),//其他失败
             Assert.equals("OK", code, ResponseEnum.ALIYUN_SMS_ERROR);
 
-        } catch (ServerException e) {
-            log.error("阿里云短信发送SDK调用失败：");
-            log.error("ErrorCode=" + e.getErrCode());
-            log.error("ErrorMessage=" + e.getErrMsg());
-            throw new BusinessException(ResponseEnum.ALIYUN_SMS_ERROR , e);
         } catch (ClientException e) {
             log.error("阿里云短信发送SDK调用失败：");
             log.error("ErrorCode=" + e.getErrCode());

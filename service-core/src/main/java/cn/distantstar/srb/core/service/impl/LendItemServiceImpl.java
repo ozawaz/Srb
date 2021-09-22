@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -185,6 +186,21 @@ public class LendItemServiceImpl extends ServiceImpl<LendItemMapper, LendItem> i
                 TransTypeEnum.INVEST_LOCK,
                 "投资项目编号：" + lend.getLendNo() + "，项目名称：" + lend.getTitle());
         transFlowService.saveTransFlow(transFlowBO);
+    }
+
+    @Override
+    public List<LendItem> selectByLendId(Long lendId, int status) {
+        QueryWrapper<LendItem> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("lend_id", lendId);
+        queryWrapper.eq("status", status);
+        return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<LendItem> selectByLendId(Long lendId) {
+        QueryWrapper<LendItem> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("lend_id", lendId);
+        return baseMapper.selectList(queryWrapper);
     }
 
     private LendItem getByLendItemNo(String lendItemNo) {

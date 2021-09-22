@@ -13,6 +13,7 @@ import cn.distantstar.srb.core.pojo.entity.UserLoginRecord;
 import cn.distantstar.srb.core.pojo.query.UserInfoQuery;
 import cn.distantstar.srb.core.pojo.vo.LoginVo;
 import cn.distantstar.srb.core.pojo.vo.RegisterVo;
+import cn.distantstar.srb.core.pojo.vo.UserIndexVo;
 import cn.distantstar.srb.core.pojo.vo.UserInfoVo;
 import cn.distantstar.srb.core.service.UserInfoService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -144,5 +145,38 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         userInfo.setId(id);
         userInfo.setStatus(status);
         baseMapper.updateById(userInfo);
+    }
+
+    @Override
+    public UserIndexVo getIndexUserInfo(Long userId) {
+        //用户信息
+        UserInfo userInfo = baseMapper.selectById(userId);
+
+        //账户信息
+        QueryWrapper<UserAccount> userAccountQueryWrapper = new QueryWrapper<>();
+        userAccountQueryWrapper.eq("user_id", userId);
+        UserAccount userAccount = userAccountMapper.selectOne(userAccountQueryWrapper);
+
+        //登录信息
+        QueryWrapper<UserLoginRecord> userLoginRecordQueryWrapper = new QueryWrapper<>();
+        userLoginRecordQueryWrapper
+                .eq("user_id", userId)
+                .orderByDesc("id")
+                .last("limit 1");
+        UserLoginRecord userLoginRecord = userLoginRecordMapper.selectOne(userLoginRecordQueryWrapper);
+
+        //组装结果数据
+        UserIndexVo userIndexVO = new UserIndexVo();
+        userIndexVO.setUserId(userInfo.getId());
+        userIndexVO.setUserType(userInfo.getUserType());
+        userIndexVO.setName(userInfo.getName());
+        userIndexVO.setNickName(userInfo.getNickName());
+        userIndexVO.setHeadImg(userInfo.getHeadImg());
+        userIndexVO.setBindStatus(userInfo.getBindStatus());
+        userIndexVO.setAmount(userAccount.getAmount());
+        userIndexVO.setFreezeAmount(userAccount.getFreezeAmount());
+        userIndexVO.setLastLoginTime(userLoginRecord.getCreateTime());
+
+        return userIndexVO;
     }
 }

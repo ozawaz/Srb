@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +32,8 @@ public class ApiSmsController {
 
     private SmsService smsService;
     private RedisTemplate<String, Object> redisTemplate;
+
+//    @Resource
 //    private CoreUserInfoClient coreUserInfoClient;
 
     @Autowired
@@ -69,7 +72,7 @@ public class ApiSmsController {
         Map<String,Object> param = new HashMap<>(1);
         param.put("code", code);
         // 发送短信
-//        smsService.send(mobile, SmsProperties.TEMPLATE_CODE, param);
+        smsService.send(mobile, SmsProperties.TEMPLATE_CODE, param);
 
         //将验证码存入redis
         redisTemplate.opsForValue().set("srb:sms:code:" + mobile,

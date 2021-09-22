@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @author distantstar
  */
 @FeignClient(value = "service-core")
-@Component
 public interface CoreUserInfoClient {
 
     /**

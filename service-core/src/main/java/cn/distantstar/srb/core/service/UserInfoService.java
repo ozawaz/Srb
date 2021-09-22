@@ -4,6 +4,7 @@ import cn.distantstar.srb.core.pojo.entity.UserInfo;
 import cn.distantstar.srb.core.pojo.query.UserInfoQuery;
 import cn.distantstar.srb.core.pojo.vo.LoginVo;
 import cn.distantstar.srb.core.pojo.vo.RegisterVo;
+import cn.distantstar.srb.core.pojo.vo.UserIndexVo;
 import cn.distantstar.srb.core.pojo.vo.UserInfoVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -54,4 +55,11 @@ public interface UserInfoService extends IService<UserInfo> {
      * @param status 锁定状态
      */
     void lock(Long id, Integer status);
+
+    /**
+     * 获取用户信息
+     * @param userId 用户id
+     * @return 返回用户信息
+     */
+    UserIndexVo getIndexUserInfo(Long userId);
 }

@@ -4,6 +4,7 @@ import cn.distantstar.srb.core.pojo.entity.LendItem;
 import cn.distantstar.srb.core.pojo.vo.InvestVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,4 +29,19 @@ public interface LendItemService extends IService<LendItem> {
      * @param paramMap 参数
      */
     void notify(Map<String, Object> paramMap);
+
+    /**
+     * 获取投资列表信息
+     * @param lendId 标id
+     * @param status 状态
+     * @return 返回列表信息
+     */
+    List<LendItem> selectByLendId(Long lendId, int status);
+
+    /**
+     * 获取投资列表信息
+     * @param lendId 标id
+     * @return 返回列表信息
+     */
+    List<LendItem> selectByLendId(Long lendId);
 }

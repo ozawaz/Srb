@@ -8,8 +8,10 @@ import cn.distantstar.common.util.RegexValidateUtils;
 import cn.distantstar.srb.base.utils.JwtUtils;
 import cn.distantstar.srb.core.pojo.vo.LoginVo;
 import cn.distantstar.srb.core.pojo.vo.RegisterVo;
+import cn.distantstar.srb.core.pojo.vo.UserIndexVo;
 import cn.distantstar.srb.core.pojo.vo.UserInfoVo;
 import cn.distantstar.srb.core.service.UserInfoService;
+import com.baomidou.mybatisplus.extension.api.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
@@ -107,6 +109,15 @@ public class UserInfoController {
     @GetMapping("/checkMobile/{mobile}")
     public boolean checkMobile(@PathVariable String mobile){
         return userInfoService.checkMobile(mobile);
+    }
+
+    @ApiOperation("获取个人空间用户信息")
+    @GetMapping("/auth/getIndexUserInfo")
+    public Result<UserIndexVo> getIndexUserInfo(HttpServletRequest request) {
+        String token = request.getHeader("token");
+        Long userId = JwtUtils.getUserId(token);
+        UserIndexVo userIndexVO = userInfoService.getIndexUserInfo(userId);
+        return Result.ok(userIndexVO);
     }
 }
 
